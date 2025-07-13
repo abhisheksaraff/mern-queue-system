@@ -2,6 +2,14 @@
 const { Router } = require("express");
 const userRouter = Router();
 
-const indexController = require("../controllers/userController");
+const userController = require("../controllers/userController");
 
-module.exports = indexController;
+userRouter.post("/logout", async (req, res) => {
+  res.redirect("/");
+});
+
+userRouter.get("/", async (req, res) => {
+  res.send("User Home");
+});
+
+module.exports = userRouter;

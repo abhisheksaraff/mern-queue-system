@@ -6,8 +6,11 @@ const app = express();
 const dotenv = require("dotenv");
 dotenv.config();
 
-// Middleware to parse URL-encoded data from HTML form submit.
-// We are using this to parse URL-encoded form data for Passport local strategy.
+// Import bycrupt for password hashing
+const bycrypt = require("bcryptjs");
+
+// Middleware to parse URL-encoded data from HTML form submit
+// We are using this to parse URL-encoded form data for Passport local strategy
 app.use(express.urlencoded({ extended: true }));
 
 // Routers
