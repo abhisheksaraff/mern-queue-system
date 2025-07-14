@@ -4,12 +4,21 @@ const userRouter = Router();
 
 const userController = require("../controllers/userController");
 
-userRouter.post("/logout", async (req, res) => {
-  res.redirect("/");
-});
+// Login Routes
+userRouter.get("/loginStatus", userController.getLoginStatus);
+userRouter.post("/login", userController.postLogin);
+userRouter.post("/logout", userController.requireUserAuth, userController.postLogout);
 
-userRouter.get("/", async (req, res) => {
-  res.send("User Home");
-});
+// Department Info Routes
+userRouter.get("/departments", userController.requireUserAuth, userController.getDepartmentsList);
+userRouter.get("/departments/:departmentID", userController.requireUserAuth, userController.getDepartmentInfoByID);
+
+// User Interaction Routes
+userRouter.get("/departments/:departmentID/users/", userController.requireUserAuth, userController.getUsersAheadInQueueByDepartmentID);
+userRouter.post("/departments/:departmentID/join", userController.requireUserAuth, userController.postUserToQueueByDepartmentID);
+userRouter.delete("/departments/:departmentID/leave", userController.requireUserAuth, userController.deleteUserFromQueueByDepartmentID);
+
+// All Undefined Routes
+userRouter.all("/{*any}", userController.routeNotFound);
 
 module.exports = userRouter;
