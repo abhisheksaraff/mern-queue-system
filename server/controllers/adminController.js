@@ -111,6 +111,23 @@ const getNextUserByDepartmentID = async (req, res) => {
     "CALLED"
   );
 
+  const io = req.app.get("io");
+
+  // Notify the user that they’re being called
+  io.to(`user_${user.id}_department_${departmentID}`).emit("user_called", {
+    message: "You have been called",
+    user: user,
+  });
+
+  // Notify all admins of the updated queue
+  const updatedQueue = await queueQueries.getAllUsersByDepartmentID(
+    departmentID
+  );
+  io.to(`admin_department_${departmentID}`).emit("queueUpdate", {
+    action: "queue_refreshed",
+    queue: updatedQueue,
+  });
+
   return res.status(200).json({
     loggedIn: true,
     message: "Authenticated",
@@ -146,6 +163,19 @@ const updateUserStatusByDepartmentID = async (req, res) => {
   if (!result) {
     return res.status(404).json({ message: "User Not Found" });
   }
+
+  io.to(`user_${user.id}_department_${departmentID}`).emit("statusUpdate", {
+    status: status,
+    departmentID,
+  });
+  // Notify all admins of the updated queue
+  const updatedQueue = await queueQueries.getAllUsersByDepartmentID(
+    departmentID
+  );
+  io.to(`admin_department_${departmentID}`).emit("queueUpdate", {
+    action: "queue_refreshed",
+    queue: updatedQueue,
+  });
 
   return res.status(200).json({
     loggedIn: true,

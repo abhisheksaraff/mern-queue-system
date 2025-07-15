@@ -74,7 +74,7 @@ const getUsersAheadInQueueByDepartmentID = async (req, res) => {
   const index = rows.findIndex((users) => users.user_id === userID);
 
   if (index === -1) {
-    return res.status(200).json({ inQueue: false, usersBefore: rows.length });
+    return res.status(200).json({ inQueue: false, usersBefore: users.length });
   }
 
   return res.status(200).json({ inQueue: true, usersBefore: index });
