@@ -1,6 +1,15 @@
 const adminQueries = require("../db/adminQueries");
+const departmentQueries = require("../db/departmentQueries");
 
 // Login/ Logout Controllers
+const checkLoginStatus = (req) => {
+  return req.isAuthenticated() && req.user.role === "admin";
+};
+
+const getLoginStatus = (req, res) => {
+  return checkLoginStatus(req);
+};
+
 const postLogin = (req, res, next) => {
   passport.authenticate("admin-local", (err, user, info) => {
     if (err) return next(err);
@@ -16,22 +25,6 @@ const postLogin = (req, res, next) => {
   })(req, res, next);
 };
 
-const checkLoginStatus = (req) => {
-  return req.isAuthenticated() && req.user.role === "admin";
-};
-
-const requireAdminAuth = (req, res, next) => {
-  if (checkLoginStatus(req)) {
-    next(); // Authorized, proceed to next
-  } else {
-    res.status(401).json({ loggedIn: false, message: "Unauthorized" });
-  }
-};
-
-const getLoginStatus = (req, res) => {
-  return checkLoginStatus(req);
-};
-
 const postLogout = (req, res, next) => {
   req.logout((err) => {
     if (err) return next(err);
@@ -40,53 +33,11 @@ const postLogout = (req, res, next) => {
   });
 };
 
-// Department Info Controllers
-const getDepartmentsList = async (req, res) => {
-  const departments = await adminQueries.getDepartmentsList();
-  return res
-    .status(200)
-    .json({ loggedIn: true, message: "Authenticated", departments });
-};
-
-const getDepartmentInfoByID = async (req, res) => {
-  const departmentID = req.params.departmentID;
-  const department = await adminQueries.getAllDepartmentInfoByID(departmentID);
-
-  if (department) {
-    return res
-      .status(200)
-      .json({ loggedIn: true, message: "Authenticated", department });
-  } else {
-    res.status(404).json({ loggedIn: true, message: "Department Not Found" });
-  }
-};
-
 // User Interaction Controllers
-const getAllUsersByDepartmentID = async (req, res) => {
-  const departmentID = req.params.departmentID;
-  const department = await adminQueries.getAllDepartmentInfoByID(departmentID);
-
-  if (!department) {
-    res.status(404).json({ loggedIn: true, message: "Department Not Found" });
-  }
-
-  const users = await adminQueries.getUsersByDepartmentID(departmentID);
-
-  if (!users) {
-    return res
-      .status(404)
-      .json({ loggedIn: true, message: "No User in Queue" });
-  }
-
-  return res
-    .status(200)
-    .json({ loggedIn: true, message: "Authenticated", department, users });
-};
-
-const getNextUserByDepartmentID = async (req, res) => {
+const getNextUser = async (req, res) => {
   const departmentID = req.params.departmentID;
   const adminID = req.user.id;
-  const department = await adminQueries.getAllDepartmentInfoByID(departmentID);
+  const department = await departmentQueries.getDepartmentInfo(departmentID);
 
   // Department found
   if (!department) {
@@ -95,7 +46,7 @@ const getNextUserByDepartmentID = async (req, res) => {
       .json({ loggedIn: true, message: "Department Not Found" });
   }
 
-  const user = await adminQueries.getNextUserByDepartmentID(departmentID);
+  const user = await adminQueries.getNextUser(departmentID);
 
   if (!user) {
     return res
@@ -104,7 +55,7 @@ const getNextUserByDepartmentID = async (req, res) => {
   }
 
   // call user
-  await adminQueries.updateUserStatusByDepartmentID(
+  await adminQueries.updateUserStatus(
     adminID,
     user.id,
     departmentID,
@@ -120,7 +71,7 @@ const getNextUserByDepartmentID = async (req, res) => {
   });
 
   // Notify all admins of the updated queue
-  const updatedQueue = await queueQueries.getAllUsersByDepartmentID(
+  const updatedQueue = await departmentQueries.getAllUsersInQueue(
     departmentID
   );
   io.to(`admin_department_${departmentID}`).emit("queueUpdate", {
@@ -135,7 +86,7 @@ const getNextUserByDepartmentID = async (req, res) => {
   });
 };
 
-const updateUserStatusByDepartmentID = async (req, res) => {
+const updateUserStatus = async (req, res) => {
   const { departmentID, userID } = req.params;
   const { status } = req.body;
   const adminID = req.user?.id;
@@ -146,11 +97,6 @@ const updateUserStatusByDepartmentID = async (req, res) => {
     )
   ) {
     return res.status(400).json({ message: "Invalid status" });
-  }
-
-  const department = await adminQueries.getAllDepartmentInfoByID(departmentID);
-  if (!department) {
-    return res.status(404).json({ message: "Department Not Found" });
   }
 
   const result = await adminQueries.updateUserStatusByDepartmentID(
@@ -169,7 +115,7 @@ const updateUserStatusByDepartmentID = async (req, res) => {
     departmentID,
   });
   // Notify all admins of the updated queue
-  const updatedQueue = await queueQueries.getAllUsersByDepartmentID(
+  const updatedQueue = await departmentQueries.getAllUsers(
     departmentID
   );
   io.to(`admin_department_${departmentID}`).emit("queueUpdate", {
@@ -190,13 +136,9 @@ const routeNotFound = (req, res) => {
 
 module.exports = {
   getLoginStatus,
-  requireAdminAuth,
   postLogin,
   postLogout,
-  getDepartmentsList,
-  getDepartmentInfoByID,
-  getAllUsersByDepartmentID,
-  getNextUserByDepartmentID,
-  updateUserStatusByDepartmentID,
+  getNextUser,
+  updateUserStatus,
   routeNotFound,
 };

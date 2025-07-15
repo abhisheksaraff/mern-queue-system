@@ -6,27 +6,8 @@ const getAdminByID = async (adminID) => {
   return rows[0];
 };
 
-// Department Info Queries
-const getDepartmentsList = async () => {
-  const { rows } = await pool.query(`SELECT * FROM departments;`);
-  return rows;
-};
-
-const getDepartmentInfoByID = async (departmentID) => {
-  const {rows} = await pool.query(`SELECT * FROM departments WHERE id = $!`, [departmentID]);
-  return rows[0];
-}
-
-const getAllUsersByDepartmentID = async (departmentID) => {
-  const { rows } = await pool.query(
-    `SELECT * FROM queues WHERE department_id = $1`,
-    [departmentID]
-  );
-  return rows;
-};
-
 // User Interaction Queries
-const getNextUserByDepartmentID = async (departmentID) => {
+const getNextUser = async (departmentID) => {
   const { rows } = await pool.query(
     `SELECT * FROM queues WHERE department_id = $1 AND STATUS = $2`,
     [departmentID, "WAITING"]
@@ -34,7 +15,7 @@ const getNextUserByDepartmentID = async (departmentID) => {
   return rows[0];
 };
 
-const updateUserStatusByDepartmentID = async (adminID, userID, departmentID, status) => {
+const updateUserStatus = async (adminID, userID, departmentID, status) => {
   const time = new Date().toTimeString().slice(0, 8);
 
   const rows = await pool.query(
@@ -50,9 +31,6 @@ const updateUserStatusByDepartmentID = async (adminID, userID, departmentID, sta
 
 module.exports = {
   getAdminByID,
-  getDepartmentsList,
-  getDepartmentInfoByID,
-  getAllUsersByDepartmentID,
-  getNextUserByDepartmentID,
-  updateUserStatusByDepartmentID,
+  getNextUser,
+  updateUserStatus,
 };

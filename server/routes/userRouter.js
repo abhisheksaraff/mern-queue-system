@@ -3,20 +3,58 @@ const { Router } = require("express");
 const userRouter = Router();
 
 const userController = require("../controllers/userController");
+const departmentController = require("../controllers/departmentController");
+
+const userMiddleware = require("../middleware/userMiddleware");
+const departmentMiddleware = require("../middleware/departmentMiddleware");
 
 // Login Routes
 userRouter.get("/loginStatus", userController.getLoginStatus);
 userRouter.post("/login", userController.postLogin);
-userRouter.post("/logout", userController.requireUserAuth, userController.postLogout);
+
+// *** User Auth Require for all routes below ***
+userRouter.use(userMiddleware.requireUserAuth);
+
+userRouter.post("/logout", userController.postLogout);
 
 // Department Info Routes
-userRouter.get("/departments", userController.requireUserAuth, userController.getDepartmentsList);
-userRouter.get("/departments/:departmentID", userController.requireUserAuth, userController.getDepartmentInfoByID);
+userRouter.get("/departments", departmentController.getDepartmentList);
+
+// ** User Auth and DepartmentExists Require for all routes below **
+userRouter.use(departmentMiddleware.checkDepartmentExists);
+
+userRouter.get(
+  "/departments/:departmentID",
+  departmentController.getDepartmentInfo
+);
+userRouter.get(
+  "/departments/:departmentID/status",
+  userController.checkUserAlreadyInQueue
+);
+userRouter.get(
+  "/departments/:departmentID/users/",
+  userController.getUsersAheadInQueue
+);
+
+// * User Auth, DepartmentExists and DepartmentOpen Require for all routes below *
+userRouter.use(departmentMiddleware.checkDepartmentOpen);
 
 // User Interaction Routes
-userRouter.get("/departments/:departmentID/users/", userController.requireUserAuth, userController.getUsersAheadInQueueByDepartmentID);
-userRouter.post("/departments/:departmentID/join", userController.requireUserAuth, userController.postUserToQueueByDepartmentID);
-userRouter.delete("/departments/:departmentID/leave", userController.requireUserAuth, userController.deleteUserFromQueueByDepartmentID);
+userRouter.get(
+  "/departments/:departmentID/queue-status",
+  userMiddleware.checkUserInQueue,
+  userController.getUsersAheadInQueue
+);
+userRouter.post(
+  "/departments/:departmentID/join",
+  userMiddleware.checkUserNotInQueue,
+  userController.postUserToQueue
+);
+userRouter.delete(
+  "/departments/:departmentID/leave",
+  userMiddleware.checkUserInQueue,
+  userController.deleteUserFromQueue
+);
 
 // All Undefined Routes
 userRouter.all("/{*any}", userController.routeNotFound);

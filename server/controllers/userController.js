@@ -1,4 +1,17 @@
 const userQueries = require("../db/userQueries");
+const departmentQueries = require("../db/departmentQueries");
+
+const checkLoginStatus = (req) => {
+  return req.isAuthenticated() && req.user.role === "user";
+};
+
+const getLoginStatus = (req, res) => {
+  if (checkLoginStatus(req)) {
+    return res.status(200).json({ loggedIn: true, message: "Authorized" });
+  } else {
+    return res.status(200).json({ loggedIn: false, message: "Unauthorized" });
+  }
+};
 
 const postLogin = (req, res, next) => {
   passport.authenticate("user-local", (err, user, info) => {
@@ -15,22 +28,6 @@ const postLogin = (req, res, next) => {
   })(req, res, next);
 };
 
-const checkLoginStatus = (req) => {
-  return req.isAuthenticated() && req.user.role === "user";
-};
-
-const requireUserAuth = (req, res, next) => {
-  if (checkLoginStatus(req)) {
-    next(); // Authorized, proceed to next
-  } else {
-    res.status(401).json({ loggedIn: false, message: "Unauthorized" });
-  }
-};
-
-const getLoginStatus = (req, res) => {
-  return checkLoginStatus(req);
-};
-
 const postLogout = (req, res, next) => {
   req.logout((err) => {
     if (err) return next(err);
@@ -39,94 +36,59 @@ const postLogout = (req, res, next) => {
   });
 };
 
-// Department Info Controllers
-const getDepartmentsList = async (req, res) => {
-  const departments = await userQueries.getDepartmentsList();
-  return res
-    .status(200)
-    .json({ loggedIn: true, message: "Authenticated", departments });
-};
-
-const getDepartmentInfoByID = async (req, res) => {
-  const departmentID = req.params.departmentID;
-  const department = await userQueries.getAllDepartmentInfoByID(departmentID);
-
-  if (department) {
-    return res
-      .status(200)
-      .json({ loggedIn: true, message: "Authenticated", department });
-  } else {
-    res.status(404).json({ loggedIn: true, message: "Department Not Found" });
-  }
-};
-
 // User Interaction Controllers
-const getUsersAheadInQueueByDepartmentID = async (req, res) => {
+const checkUserAlreadyInQueue = async (req, res) => {
   const departmentID = req.params.departmentID;
   const userID = req.user.id;
-  const department = await userQueries.getAllDepartmentInfoByID(departmentID);
 
-  if (!department) {
-    res.status(404).json({ loggedIn: true, message: "Department Not Found" });
+  const userAlreadyInQueue = await userQueries.checkUserAlreadyInQueue(
+    userID,
+    departmentID
+  );
+
+  if (userAlreadyInQueue) {
+    return res.status(200).json({ inQueue: true });
   }
 
-  const users = await userQueries.getUsersByDepartmentID(departmentID);
+  res.status(200).json({ inQueue: false });
+};
+
+const getUsersAheadInQueue = async (req, res) => {
+  const departmentID = req.params.departmentID;
+  const userID = req.user.id;
+
+  const users = await departmentQueries.getAllUsersInQueue(departmentID);
   const index = rows.findIndex((users) => users.user_id === userID);
 
   if (index === -1) {
-    return res.status(200).json({ inQueue: false, usersBefore: users.length });
+    return res.status(200).json({ inQueue: false, usersBefore: users.length, message: "Authorized" });
   }
 
   return res.status(200).json({ inQueue: true, usersBefore: index });
 };
 
-const postUserToQueueByDepartmentID = async (req, res) => {
+const postUserToQueue = async (req, res) => {
   const departmentID = req.params.departmentID;
   const userID = req.user.id;
 
-  const department = await userQueries.getAllDepartmentInfoByID(departmentID);
-  if (!department) {
-    return res.status(404).json({ message: "Department Not Found" });
-  }
-
-  const userAlreadyInQueue =
-    await userQueries.getUserAlreadyInQueueByDepartmentID(userID, departmentID);
-
-  if (userAlreadyInQueue) {
-    return res.status(409).json({
-      inQueue: true,
-      message: "User already in queue",
-    });
-  }
-
-  const result = await userQueries.postUserToQueueByDepartmentID(
-    userID,
-    departmentID
-  );
-
-  if (!result) {
-    return res.status(404).json({ message: "User Not Found" });
-  }
+  const result = await userQueries.postUserToQueue(userID, departmentID);
 
   return res.status(200).json({
     loggedIn: true,
-    message: `Authorized`,
+    message: "User added to queue",
   });
 };
 
-const deleteUserFromQueueByDepartmentID = async (req, res) => {
+const deleteUserFromQueue = async (req, res) => {
   const departmentID = req.params.departmentID;
   const userID = req.user.id;
 
-  const department = await userQueries.getAllDepartmentInfoByID(departmentID);
+  const department = await departmentQueries.getDepartmentInfo(departmentID);
   if (!department) {
     return res.status(404).json({ message: "Department Not Found" });
   }
 
-  const result = await userQueries.deleteUserFromQueueByDepartmentID(
-    userID,
-    departmentID
-  );
+  const result = await userQueries.deleteUserFromQueue(userID, departmentID);
 
   if (!result) {
     return res.status(404).json({ message: "User Not Found" });
@@ -145,13 +107,11 @@ const routeNotFound = (req, res) => {
 
 module.exports = {
   postLogin,
-  requireUserAuth,
   getLoginStatus,
   postLogout,
-  getDepartmentsList,
-  getDepartmentInfoByID,
-  getUsersAheadInQueueByDepartmentID,
-  postUserToQueueByDepartmentID,
-  deleteUserFromQueueByDepartmentID,
+  checkUserAlreadyInQueue,
+  getUsersAheadInQueue,
+  postUserToQueue,
+  deleteUserFromQueue,
   routeNotFound,
 };
