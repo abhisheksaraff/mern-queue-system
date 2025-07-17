@@ -1,0 +1,329 @@
+body {
+  display: block;
+  position: center;
+  font-family: "Space Mono", monospace;
+  background-color: rgb(240, 244, 247);
+  background: linear-gradient(-70deg, #000000, #000000);
+  height: 100vh;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.logo {
+  color: #ffffff;
+  font-size: 30px;
+  font-weight: normal;
+  pointer-events: none;
+  display: block;
+  padding-bottom: 2px;
+}
+
+.submit {
+  text-align: center;
+  color: #4bbe96;
+  text-shadow: rgb(44, 144, 5) 2px 0 10px;
+  font-size: 25px;
+  font-weight: normal;
+  display: block;
+  cursor: pointer;
+  padding: 30px 5px 0px 0px;
+}
+
+.submit:hover {
+  filter: brightness(150%);
+  text-shadow: rgb(44, 144, 5) 3px 0 10px;
+}
+
+/* Background circles start */
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  background: linear-gradient(120deg, #e31837, #f15f75);
+}
+.circles {
+  position: absolute;
+  height: 270px;
+  width: 450px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+}
+.circle-1 {
+  height: 300px;
+  width: 300px;
+  top: 100px;
+  left: -20px;
+  opacity: 0.8;
+  animation-timing-function: cubic-bezier(0.54, 0.085, 0.5, 0.92);
+  animation-iteration-count: infinite;
+  animation-name: float;
+  -webkit-animation-name: float;
+  animation-duration: 6s;
+  -webkit-animation-duration: 6s;
+  -webkit-animation-delay: 3.5s;
+  animation-delay: 3.5s;
+  animation-direction: alternate;
+}
+
+.circle-2 {
+  height: 240px;
+  width: 240px;
+  bottom: 40px;
+  right: -100px;
+  opacity: 0.8;
+  animation-timing-function: cubic-bezier(0.54, 0.085, 0.5, 0.92);
+  animation-iteration-count: infinite;
+  animation-name: float;
+  -webkit-animation-name: float;
+  animation-duration: 6s;
+  -webkit-animation-duration: 6s;
+  -webkit-animation-delay: 2s;
+  animation-delay: 2s;
+  animation-direction: alternate;
+}
+/* Background circles end */
+
+/* ANIMATIONS */
+@keyframes explode {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+@keyframes float {
+  0% {
+    -webkit-transform: rotateX(0deg) translateY(0px);
+    -moz-transform: rotateX(0deg) translateY(0px);
+    -ms-transform: rotateX(0deg) translateY(0px);
+    -o-transform: rotateX(0deg) translateY(0px);
+    transform: rotateX(0deg) translateY(0px);
+  }
+
+  50% {
+    -webkit-transform: rotateX(0deg) translateY(1px) translateX(5px);
+    -moz-transform: rotateX(0deg) translateY(10px) translateX(5px);
+    -ms-transform: rotateX(0deg) translateY(30px) translateX(5px);
+    -o-transform: rotateX(0deg) translateY(40px) translateX(5px);
+    transform: rotateX(0deg) translateY(10px) translateX(5px);
+  }
+  100% {
+    -webkit-transform: rotateX(0deg) translateY(0px) translateX(1px);
+    -moz-transform: rotateX(0deg) translateY(0px) translateX(1px);
+    -ms-transform: rotateX(0deg) translateY(0px) translateX(1px);
+    -o-transform: rotateX(0deg) translateY(0px) translateX(1px);
+    transform: rotateX(0deg) translateY(0px) translateX(1px);
+  }
+}
+
+.mdl {
+  height: auto;
+  width: 350px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-60%, -60%);
+}
+
+@media (max-width: 600px) {
+  .mdl {
+    margin-left: 15%;
+  }
+}
+
+h1 {
+  font-family: "Poppins", sans-serif;
+  font-size: 20px;
+  font-weight: 300;
+  padding-left: 30px;
+  padding-bottom: 20px;
+  color: #ffffff;
+  width: 350px;
+  line-height: 1.5em;
+  text-align: left;
+}
+
+.card {
+  width: 100%;
+  max-width: 350px;
+  height: auto;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(35px);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 80px rgba(0, 0, 0, 0.25);
+  padding: 30px 30px 30px 30px;
+  overflow: hidden;
+}
+
+.logo {
+  padding-bottom: 40px;
+  opacity: 0.9;
+}
+
+input[id="username"] {
+  font-size: 30px;
+  width: 100%;
+  height: 50px;
+}
+
+input[id="username"]::placeholder {
+  color: #b5b5b5;
+  font-size: 30px;
+  font-family: "Space Mono", monospace;
+}
+
+input::placeholder {
+  color: #b5b5b5;
+}
+
+.group {
+  display: inline-flex;
+  margin: 0;
+  padding: 0;
+}
+
+.username {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  margin-bottom: 30px;
+  width: 100%;
+}
+
+.username > input[id="username"] {
+  border: none;
+  margin-bottom: 0px;
+  outline: none;
+}
+
+.password > input[id="password"] {
+  border: none;
+  margin-bottom: 0px;
+  outline: none;
+}
+
+.underline {
+  transition: all 0.3s;
+  display: inline-block;
+  bottom: 0;
+  left: -100%;
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background-color: #ffffff;
+}
+
+.username > input[id="username"]:hover + .underline {
+  left: 0;
+}
+
+.password > input[id="password"]:focus + .underline {
+  left: 0;
+}
+
+.password > input[id="password"]:hover + .underline {
+  left: 0;
+}
+.password > input[id="password"]:focus + .underline {
+  left: 0;
+}
+
+.password {
+  font-family: "Space Mono", monospace;
+  padding: 0px 80px 0px 0px;
+  margin-right: 40px;
+  width: 75%;
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+}
+
+input {
+  font-family: "Space Mono", monospace;
+  border: none;
+  font-size: 16px;
+  height: 26px;
+  color: #ffffff;
+  background: 0;
+  padding: 0;
+  width: 0;
+}
+
+input:focus {
+  border-bottom: 2px solid white;
+  outline: none;
+  font-family: "Space Mono", monospace;
+  border: none;
+  color: white;
+  font-size: 16px;
+  height: 30px;
+  margin-bottom: -2px;
+}
+
+input:hover {
+  border-bottom: 2px solid white;
+  color: white;
+  margin-bottom: -2px;
+  font-size: 16px;
+  height: 30px;
+}
+
+input[id="username"]:focus {
+  border: none;
+  border-bottom: 2px solid white;
+  color: white;
+  font-size: 30px;
+  height: 50px;
+  margin-bottom: -2px;
+  width: 400px;
+}
+
+input[id="username"]:hover {
+  border: none;
+  border-bottom: 2px solid white;
+  color: white;
+  font-size: 30px;
+  height: 50px;
+  margin-bottom: -2px;
+  width: 400px;
+}
+
+input[id="password"] {
+  color: white;
+  margin-bottom: -2px;
+  font-size: 30px;
+  height: 50px;
+  width: 400px;
+}
+
+input[id="password"]:hover {
+  border-bottom: 2px solid white;
+  color: white;
+  margin-bottom: -2px;
+  font-size: 30px;
+  height: 50px;
+  width: 400px;
+}
+
+input[id="password"]:focus {
+  border-bottom: 2px solid white;
+  color: white;
+  margin-bottom: -2px;
+  font-size: 30px;
+  height: 50px;
+  width: 400px;
+}
+
+label {
+  color: white;
+  font-size: 12px;
+  font-weight: normal;
+  pointer-events: none;
+  display: block;
+  padding-bottom: 2px;
+}
