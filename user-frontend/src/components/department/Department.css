@@ -1,0 +1,91 @@
+.department {
+  width: 10vw;
+  height: 0px;
+  margin-bottom: 100px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  color: white;
+  font-size: 12px;
+
+  .closed {
+    color: grey;
+  }
+
+  .closed:hover {
+    cursor: not-allowed;
+  }
+
+  .container {
+    transition: transform 600ms ease;
+    cursor: default;
+    top: 0px;
+    left: 0;
+    right: 0;
+    width: 75vw;
+    height: 80px;
+    z-index: 0;
+    padding: 0px;
+    margin: 0px 50px 100px 50px;
+
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+
+    .info {
+      max-width: 50%;
+      font-weight: normal;
+      pointer-events: none;
+      display: block;
+      padding: 5px;
+      overflow: hidden;
+
+      .department-name {
+        font-size: clamp(15px, 2vw, 20px);
+      }
+    }
+
+    .details {
+      font-size: 17px;
+      margin: 20px 20px 0 0;
+      text-align: center;
+      font-weight: normal;
+      display: block;
+      padding: 30px 5px 0px 0px;
+    }
+  }
+  
+  .open .details{
+      color: #4bbe96;
+      text-shadow: rgb(44, 144, 5) 2px 0 10px;
+  }
+
+  .open .details:hover {
+    display: flex;
+    cursor: pointer;
+    filter: brightness(150%);
+    text-shadow: rgb(44, 144, 5) 3px 0 10px;
+  }
+
+  .container:hover {
+    transform: translateY(-8px) scale(1.05);
+  }
+
+  .container::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    z-index: -1;
+    border-radius: 1em;
+    background: linear-gradient(120deg, #e31837, #f15f75);
+    opacity: 0;
+    transition: opacity 600ms ease-in-out;
+  }
+
+  .container:hover::before {
+    opacity: 1;
+  }
+}

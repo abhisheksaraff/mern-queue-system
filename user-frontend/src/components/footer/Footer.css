@@ -1,0 +1,57 @@
+.Footer {
+  font-size: 13px;
+
+  .container {
+    color: white;
+    position: fixed;
+    height: 50px;
+    z-index: 1000;
+    background-image: linear-gradient(
+      -90deg,
+      rgba(255, 255, 255, 0.3),
+      rgba(255, 255, 255, 0.1)
+    );
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    margin-bottom: 0px;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+
+    box-shadow: 0 0.25em 0.375em hsla(0, 0%, 0%, 0.1);
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    .left {
+      margin-left: 20px;
+    }
+
+    .right {
+      display: flex;
+
+      * {
+        margin: 0 12px 0 0px;
+        fill: white;
+        transition: transform 0.3s;
+      }
+
+      *:hover {
+        transform: scale(1.12);
+      }
+    }
+  }
+
+  .base-layer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 800;
+    height: 56px;
+    background: black;
+    pointer-events: none;
+  }
+}

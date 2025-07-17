@@ -9,6 +9,13 @@ export const getUserLoginStatus = async () => {
   return res.data;
 };
 
+export const getUserInfo = async () => {
+  const res = await axios.get(`${API_BASE_URL}/userInfo`, {
+    withCredentials: true,
+  });
+  return res.data;
+};
+
 export const postLogin = async () => {
   const res = await axios.get(`${API_BASE_URL}/login`, {
     withCredentials: true,

@@ -1,6 +1,6 @@
-import Header from "../../components/Header";
-import DepartmentList from "../../components/DepartmentList";
-import Footer from "../../components/Footer";
+import Header from "../../components/header/Header";
+import DepartmentList from "../../components/departmentList/DepartmentList";
+import Footer from "../../components/footer/Footer";
 
 function Home() {
   return (
