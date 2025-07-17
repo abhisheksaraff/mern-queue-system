@@ -1,0 +1,99 @@
+.DepartmentDetails {
+  margin-top: 130px;
+  display: flex;
+  justify-content: center;
+
+  .container {
+    cursor: default;
+    top: 10px;
+    left: 0;
+    right: 0;
+    width: 80vw;
+    margin-bottom: 130px;
+    padding: 10px;
+
+    z-index: 0;
+    padding-top: 15px;
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(5px);
+    background-image: linear-gradient(
+      -90deg,
+      rgba(255, 255, 255, 0.3),
+      rgba(255, 255, 255, 0.1)
+    );
+
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 1em;
+    backdrop-filter: blur(35px);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 80px rgba(0, 0, 0, 0.25);
+
+    .back {
+      font-size: 40px;
+      cursor: pointer;
+      color: #4bbe96;
+      text-shadow: rgb(44, 144, 5) 2px 0 10px;
+      transition: transform 0.3s;
+    }
+    .back:hover {
+      filter: brightness(150%);
+      text-shadow: rgb(44, 144, 5) 3px 0 10px;
+      transform: translateY(-10px);
+    }
+
+    .name {
+      font-size: 30px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1em;
+      margin-bottom: 2em;
+    }
+
+    th,
+    td {
+      border: 1px solid #ccc;
+      padding-bottom: 8px;
+      text-align: center;
+    }
+
+    .bottom {
+      display: flex;
+      flex-direction: row;
+      margin-top: 20px;
+
+      .space {
+        min-width: 70%;
+      }
+
+      .join {
+        font-size: 30px;
+        cursor: pointer;
+        color: #fdee65;
+        text-shadow: rgb(128, 144, 5) 2px 0 10px;
+        transition: transform 0.3s;
+      }
+      .join:hover {
+        filter: brightness(150%);
+        text-shadow: rgb(128, 144, 5) 2px 0 10px;
+        transform: translateY(-1px);
+      }
+
+      .leave {
+        font-size: 30px;
+        cursor: pointer;
+        color: #ff6d6d;
+        text-shadow: rgb(242, 49, 49) 2px 0 10px;
+        transition: transform 0.3s;
+      }
+      .leave:hover {
+        filter: brightness(150%);
+        text-shadow: rgb(144, 5, 5) 2px 0 10px;
+        transform: translateY(-1px);
+      }
+    }
+  }
+}

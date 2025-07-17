@@ -1,7 +1,6 @@
 body {
   display: block;
   position: center;
-  font-family: "Space Mono", monospace;
   background-color: rgb(240, 244, 247);
   background: linear-gradient(-70deg, #000000, #000000);
   height: 100vh;
