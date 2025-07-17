@@ -15,10 +15,12 @@ userRouter.post("/login", userController.postLogin);
 // *** User Auth Require for all routes below ***
 userRouter.use(userMiddleware.requireUserAuth);
 
+userRouter.get("/userInfo", userController.getUserInfo);
+
 userRouter.post("/logout", userController.postLogout);
 
 // Department Info Routes
-userRouter.get("/departments", departmentController.getDepartmentList);
+userRouter.get("/departments", departmentController.getDepartmentsList);
 
 // ** User Auth and DepartmentExists Require for all routes below **
 userRouter.use(departmentMiddleware.checkDepartmentExists);
@@ -27,17 +29,18 @@ userRouter.get(
   "/departments/:departmentID",
   departmentController.getDepartmentInfo
 );
+
+// * User Auth, DepartmentExists and DepartmentOpen Require for all routes below *
+userRouter.use(departmentMiddleware.checkDepartmentOpen);
+
 userRouter.get(
   "/departments/:departmentID/status",
   userController.checkUserAlreadyInQueue
 );
 userRouter.get(
-  "/departments/:departmentID/users/",
+  "/departments/:departmentID/usersAhead/",
   userController.getUsersAheadInQueue
 );
-
-// * User Auth, DepartmentExists and DepartmentOpen Require for all routes below *
-userRouter.use(departmentMiddleware.checkDepartmentOpen);
 
 // User Interaction Routes
 userRouter.get(

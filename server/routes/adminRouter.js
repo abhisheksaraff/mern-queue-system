@@ -15,6 +15,8 @@ adminRouter.post("/login", adminController.postLogin);
 // *** Admin Auth Require for all routes below ***
 adminRouter.use(adminMiddleware.requireAdminAuth);
 
+adminRouter.get("/adminInfo", adminController.getAdminInfo);
+
 adminRouter.post(
   "/logout",
   adminController.postLogout
@@ -23,7 +25,7 @@ adminRouter.post(
 // Department Info Routes
 adminRouter.get(
   "/departments",
-  departmentController.getDepartmentList
+  departmentController.getDepartmentsList
 );
 
 // ** Admin Auth and DepartmentExists Require for all routes below **
@@ -34,7 +36,7 @@ adminRouter.get(
   departmentController.getDepartmentInfo
 );
 
-// * User Auth, DepartmentExists and DepartmentOpen Require for all routes below *
+// * Admin Auth, DepartmentExists and DepartmentOpen Require for all routes below *
 adminRouter.use(departmentMiddleware.checkDepartmentOpen);
 
 // User Interaction Routes

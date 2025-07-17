@@ -1,7 +1,7 @@
 const departmentQueries = require("../db/departmentQueries");
 
-const getDepartmentList = async (req, res) => {
-  const departments = await departmentQueries.getDepartmentList();
+const getDepartmentsList = async (req, res) => {
+  const departments = await departmentQueries.getDepartmentsList();
   return res
     .status(200)
     .json({ loggedIn: true, message: "Authenticated", departments });
@@ -70,7 +70,7 @@ const getAllUsers = async (req, res) => {
 };
 
 module.exports = {
-  getDepartmentList,
+  getDepartmentsList,
   getDepartmentInfo,
   getIsDepartmentOpen,
   getAllUsers,

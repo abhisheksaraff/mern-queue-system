@@ -10,6 +10,12 @@ const getLoginStatus = (req, res) => {
   return checkLoginStatus(req);
 };
 
+const getAdminInfo = async (req, res) => {
+  const adminID = req.user.ID;
+  const admin = await adminQueries.getAdminInfo(adminID);
+  return res.status(200).json({ message: "Authorized", admin });
+};
+
 const postLogin = (req, res, next) => {
   passport.authenticate("admin-local", (err, user, info) => {
     if (err) return next(err);
@@ -37,15 +43,6 @@ const postLogout = (req, res, next) => {
 const getNextUser = async (req, res) => {
   const departmentID = req.params.departmentID;
   const adminID = req.user.id;
-  const department = await departmentQueries.getDepartmentInfo(departmentID);
-
-  // Department found
-  if (!department) {
-    return res
-      .status(404)
-      .json({ loggedIn: true, message: "Department Not Found" });
-  }
-
   const user = await adminQueries.getNextUser(departmentID);
 
   if (!user) {
@@ -55,12 +52,7 @@ const getNextUser = async (req, res) => {
   }
 
   // call user
-  await adminQueries.updateUserStatus(
-    adminID,
-    user.id,
-    departmentID,
-    "CALLED"
-  );
+  await adminQueries.updateUserStatus(adminID, user.id, departmentID, "CALLED");
 
   const io = req.app.get("io");
 
@@ -71,9 +63,7 @@ const getNextUser = async (req, res) => {
   });
 
   // Notify all admins of the updated queue
-  const updatedQueue = await departmentQueries.getAllUsersInQueue(
-    departmentID
-  );
+  const updatedQueue = await departmentQueries.getAllUsersInQueue(departmentID);
   io.to(`admin_department_${departmentID}`).emit("queueUpdate", {
     action: "queue_refreshed",
     queue: updatedQueue,
@@ -92,7 +82,8 @@ const updateUserStatus = async (req, res) => {
   const adminID = req.user?.id;
 
   if (
-    !["NOSHOW", "COMPLETED", "CALLED", "RESCINDED", "WAITING"].includes(
+    !["NOSHOW", "COMPLETED"].includes(
+      // or , "CALLED", "RESCINDED", "WAITING"
       status.toUpperCase()
     )
   ) {
@@ -115,9 +106,7 @@ const updateUserStatus = async (req, res) => {
     departmentID,
   });
   // Notify all admins of the updated queue
-  const updatedQueue = await departmentQueries.getAllUsers(
-    departmentID
-  );
+  const updatedQueue = await departmentQueries.getAllUsers(departmentID);
   io.to(`admin_department_${departmentID}`).emit("queueUpdate", {
     action: "queue_refreshed",
     queue: updatedQueue,
@@ -136,6 +125,7 @@ const routeNotFound = (req, res) => {
 
 module.exports = {
   getLoginStatus,
+  getAdminInfo,
   postLogin,
   postLogout,
   getNextUser,

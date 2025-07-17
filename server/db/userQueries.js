@@ -8,6 +8,14 @@ const getUserByID = async (userID) => {
   return rows[0];
 };
 
+const getUserInfo = async (userID) => {
+  const { rows } = await pool.query(`SELECT id, name FROM users WHERE id = $1`, [
+    userID,
+  ]);
+
+  return rows[0];
+};
+
 // Queue Interaction Queries
 const checkUserAlreadyInQueue = async (userID, departmentID) => {
   const rows = await pool.query(
@@ -48,6 +56,7 @@ const deleteUserFromQueue = async (userID, departmentID) => {
 
 module.exports = {
   getUserByID,
+  getUserInfo,
   checkUserAlreadyInQueue,
   postUserToQueue,
   deleteUserFromQueue,

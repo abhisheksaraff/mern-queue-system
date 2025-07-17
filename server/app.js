@@ -41,8 +41,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Setup Routes
-app.use("/admin/api", adminRouter);
-app.use("/api", userRouter);
+app.use("/api/admin", adminRouter);
+app.use("/api/user", userRouter);
 
 app.all("/{*any}", (req, res) => {
   res.status(404).json({ message: "Route not found" });

@@ -2,7 +2,18 @@ const pool = require("./pool");
 
 // Login Queries
 const getAdminByID = async (adminID) => {
-  const { rows } = await pool.query(`SELECT * FROM admins WHERE id = $1`, [adminID]);
+  const { rows } = await pool.query(`SELECT * FROM admins WHERE id = $1`, [
+    adminID,
+  ]);
+  return rows[0];
+};
+
+const getAdminInfo = async (adminID) => {
+  const { rows } = await pool.query(
+    `SELECT id, name FROM admins WHERE id = $1`,
+    [userID]
+  );
+
   return rows[0];
 };
 
@@ -31,6 +42,7 @@ const updateUserStatus = async (adminID, userID, departmentID, status) => {
 
 module.exports = {
   getAdminByID,
+  getAdminInfo,
   getNextUser,
   updateUserStatus,
 };

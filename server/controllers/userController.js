@@ -36,7 +36,13 @@ const postLogout = (req, res, next) => {
   });
 };
 
-// User Interaction Controllers
+const getUserInfo = async (req, res) => {
+  const userID = req.user.ID;
+  const user = await userQueries.getUserInfo(userID);
+  return res.status(200).json({ message: "Authorized", user });
+};
+
+// Queue Interaction Controllers
 const checkUserAlreadyInQueue = async (req, res) => {
   const departmentID = req.params.departmentID;
   const userID = req.user.id;
@@ -61,7 +67,11 @@ const getUsersAheadInQueue = async (req, res) => {
   const index = rows.findIndex((users) => users.user_id === userID);
 
   if (index === -1) {
-    return res.status(200).json({ inQueue: false, usersBefore: users.length, message: "Authorized" });
+    return res.status(200).json({
+      inQueue: false,
+      usersBefore: users.length,
+      message: "Authorized",
+    });
   }
 
   return res.status(200).json({ inQueue: true, usersBefore: index });
@@ -83,16 +93,7 @@ const deleteUserFromQueue = async (req, res) => {
   const departmentID = req.params.departmentID;
   const userID = req.user.id;
 
-  const department = await departmentQueries.getDepartmentInfo(departmentID);
-  if (!department) {
-    return res.status(404).json({ message: "Department Not Found" });
-  }
-
   const result = await userQueries.deleteUserFromQueue(userID, departmentID);
-
-  if (!result) {
-    return res.status(404).json({ message: "User Not Found" });
-  }
 
   return res.status(200).json({
     loggedIn: true,
@@ -109,6 +110,7 @@ module.exports = {
   postLogin,
   getLoginStatus,
   postLogout,
+  getUserInfo,
   checkUserAlreadyInQueue,
   getUsersAheadInQueue,
   postUserToQueue,
