@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Department.css";
 
 const Department = ({ department }) => {
   const [status, checkStatus] = useState("open");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const checkStatus = async () => {
@@ -21,7 +23,10 @@ const Department = ({ department }) => {
           <div className="department-name">{department.name}</div>
           <div className="status">{status}</div>
         </div>
-        <div className="details">Details</div>
+        <div
+          className="details"
+          onClick={() => navigate(`/home/${department.id}`)}
+        >Details</div>
       </div>
     </div>
   );

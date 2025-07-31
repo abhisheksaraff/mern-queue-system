@@ -20,7 +20,6 @@ const Header = () => {
 
   const handleSubmit = async (e) => {
     try {
-      console.log("here")
       const res = await postLogout();
     } catch (err) {
       console.error(err);

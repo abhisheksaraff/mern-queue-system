@@ -1,3 +1,7 @@
+import { useNavigate } from "react-router-dom";
+import { getDepartmentInfo } from "../../services/api";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import "./DepartmentDetails.css";
 
 const departmentDetails = (id) => {
@@ -36,12 +40,38 @@ const weekdays = [
 const DepartmentDetails = () => {
   const id = 1;
   const department = departmentDetails(id);
+  const navigate = useNavigate();
+  // const { departmentid } = useParams();
+  // const [department, setDepartment] = useState(null);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
+
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     try {
+  //       setLoading(true);
+  //       const data = await getDepartmentInfo(1);
+  //       setDepartment(data);
+  //     } catch (err) {
+  //       setError(err.message || "Failed to load department info");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
+  //   fetchData();
+  // }, [departmentid]);
+
+  // if (loading) return <div>Loading...</div>;
+  // if (error) return <div>Error: {error}</div>;
+  // if (!department) return <div>No data found</div>;
 
   return (
     <div className="DepartmentDetails">
       <div className="container">
         <div className="top">
-          <span className="back">⇚ </span>
+          <span className="back" onClick={() => navigate(`/home`)}>
+            ⇚{" "}
+          </span>
           <span className="name">{department.name}</span>
           <table>
             <thead>
