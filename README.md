@@ -1,154 +1,120 @@
----
+# mern-queue-system
 
-# Queue System
-
-A real-time queue management system using the (PostgreSQL, Express, React, Node.js) with **Socket.IO**. It supports department-based queues, role-based login (admin/user), and secure session-based authentication.
+Sure! Here's a concise and professional `README.md` for your **MERN Queue System** with real-time updates using Socket.IO:
 
 ---
 
-## 🚀 Features
+# MERN Queue System
 
-* Real-time queue updates via Socket.IO
-* Admin & User login with session-based auth
-* Join/leave queue per department
-* Admin actions: call next, update status, view all users
-* Middleware-protected route logic
-* Scalable and modular backend
+A real-time queue management system built with the **MERN** stack (MongoDB, Express.js, React, Node.js) and **Socket.IO**. It allows users to join virtual queues and admins to manage them across multiple departments.
 
----
+## Features
 
-## 🛠️ Tech Stack
+* ✅ Real-time queue updates with Socket.IO
+* 👥 User and Admin roles
+* 🧑‍💼 Multi-department queue management
+* 🔒 Session-based authentication with Passport.js
+* 🌐 CORS and cookie support for cross-origin auth
+* 📦 Modular backend and frontend structure
 
-**Frontend:** React (Vite), Axios, Socket.IO Client
-**Backend:** Node.js, Express.js, PostgreSQL, Mongoose, Passport.js, Socket.IO
-**Auth:** Passport-Local, express-session
-**Middleware:** Role-based + department validation
+## Tech Stack
 
----
+* **Frontend**: React, Vite, Axios, Socket.IO Client
+* **Backend**: Node.js, Express, MongoDB, Mongoose, Passport.js, Socket.IO
+* **Auth**: Express-Session, Passport-Local
+* **Deployment-ready**: Modular and scalable structure
 
-## 📁 Folder Structure
+## Folder Structure
 
 ```
-/client              # React frontend
+/client         # React frontend (user/admin portals)
 /server
-  /controllers       # Route logic for users/admins/departments
-  /routes            # Express routers
-  /models            # Mongoose schemas
-  /middleware        # Auth & department middleware
-  /config            # DB and passport setup
-  /socket            # Socket.IO setup
-  app.js             # Express entry point
+  /controllers  # Express controllers
+  /models       # Mongoose models
+  /routes       # Express routes
+  /config       # Passport and DB configs
+  /socket       # Socket.IO setup
+  app.js        # Entry point
 ```
 
----
+## Setup Instructions
 
-## 🔧 Setup
-
-### 1. Clone & Install
+### 1. Clone Repo
 
 ```bash
 git clone https://github.com/yourusername/mern-queue-system.git
 cd mern-queue-system
+```
 
-# Backend
+### 2. Install Dependencies
+
+**Backend:**
+
+```bash
 cd server
 npm install
+```
 
-# Frontend
+**Frontend:**
+
+```bash
 cd ../client
 npm install
 ```
 
-### 2. Set Environment Variables (`/server/.env`)
+### 3. Environment Variables
 
-```env
-# Database
-DB_HOST
-DB_USER
-DB_PASSWORD
-DB_NAME
-DB_PORT
+Create `.env` in `/server`:
 
-# Express
-PORT
-
-# URLs
-URL_LOCAL
-URL_DEPLOYED_ADMIN
-URL_DEPLOYED_USER
-
-# Session
-SESSION_SECRET
+```
+PORT=5000
+MONGO_URI=mongodb://localhost:27017/queue-system
+SESSION_SECRET=your_secret
+CLIENT_URL=http://localhost:5173
 ```
 
-### 3. Run the App
+### 4. Run the App
+
+**Backend:**
 
 ```bash
-# In /server
-npm run dev
-
-# In /client
+cd server
 npm run dev
 ```
 
----
+**Frontend:**
 
-## 🌐 API Routes
+```bash
+cd client
+npm run dev
+```
 
-### 👤 User Routes (`/api/user`)
+### 5. Open in Browser
 
-| Method | Route                                     | Description               |
-| ------ | ----------------------------------------- | ------------------------- |
-| GET    | `/loginStatus`                            | Check user login status   |
-| POST   | `/login`                                  | User login                |
-| POST   | `/logout`                                 | User logout               |
-| GET    | `/userInfo`                               | Get current user info     |
-| GET    | `/departments`                            | List all departments      |
-| GET    | `/departments/:departmentID`              | Get department info       |
-| GET    | `/departments/:departmentID/status`       | Is user already in queue? |
-| GET    | `/departments/:departmentID/usersAhead`   | See users ahead in queue  |
-| GET    | `/departments/:departmentID/queue-status` | Get live queue status     |
-| POST   | `/departments/:departmentID/join`         | Join department queue     |
-| DELETE | `/departments/:departmentID/leave`        | Leave department queue    |
-| ALL    | `/{*any}`                                 | Catch-all 404             |
+Frontend: [http://localhost:5173](http://localhost:5173)
+Backend API: [http://localhost:5000/api](http://localhost:5000/api)
 
-### 🧑‍💼 Admin Routes (`/api/admin`)
+## API Overview
 
-| Method | Route                                        | Description                              |
-| ------ | -------------------------------------------- | ---------------------------------------- |
-| GET    | `/loginStatus`                               | Check admin login status                 |
-| POST   | `/login`                                     | Admin login                              |
-| POST   | `/logout`                                    | Admin logout                             |
-| GET    | `/adminInfo`                                 | Get current admin info                   |
-| GET    | `/departments`                               | List all departments                     |
-| GET    | `/departments/:departmentID`                 | Get department info                      |
-| GET    | `/departments/:departmentID/users`           | List all users in queue                  |
-| GET    | `/departments/:departmentID/nextUser`        | Get next user in queue                   |
-| PUT    | `/departments/:departmentID/:userID/:status` | Update user status (CALLED, NOSHOW etc.) |
-| ALL    | `/{*any}`                                    | Catch-all 404                            |
+| Route           | Method | Description             |
+| --------------- | ------ | ----------------------- |
+| `/login`        | POST   | User/Admin login        |
+| `/logout`       | POST   | Logout current session  |
+| `/queue/join`   | POST   | User joins a department |
+| `/queue/status` | GET    | Get queue status        |
+| `/admin/update` | POST   | Admin updates queue     |
+
+## Future Improvements
+
+* ✅ JWT-based auth alternative
+* 📱 Mobile responsive UI
+* 📊 Admin dashboard with analytics
+* 📍 Location-aware queue suggestions
+
+## License
+
+MIT License
 
 ---
 
-## 🔐 Middleware Logic
-
-* `requireUserAuth` / `requireAdminAuth`: Checks session identity
-* `checkDepartmentExists`: Ensures valid department ID
-* `checkDepartmentOpen`: Queue must be open to interact
-* `checkUserInQueue` / `checkUserNotInQueue`: Prevent invalid joins/leaves
-
----
-
-## 🧭 Future Enhancements
-
-* JWT-based stateless auth
-* WebSocket reconnection handling
-* Admin analytics dashboard
-* Rate limiting & spam protection
-
----
-
-## 📜 License
-
-MIT
-
----
+Let me know if you'd like a version tailored more to **admin-user separation**, **MongoDB Atlas setup**, or **Docker deployment**.

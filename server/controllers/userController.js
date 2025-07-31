@@ -1,3 +1,4 @@
+const passport = require("passport");
 const userQueries = require("../db/userQueries");
 const departmentQueries = require("../db/departmentQueries");
 
@@ -14,21 +15,27 @@ const getLoginStatus = (req, res) => {
 };
 
 const postLogin = (req, res, next) => {
-  passport.authenticate("user-local", (err, user, info) => {
+  passport.authenticate("local", (err, user, info) => {
     if (err) return next(err);
-    if (!user)
+    if (!user) {
       return res
         .status(401)
         .json({ loggedIn: false, message: info?.message || "Unauthorized" });
+    }
 
-    req.logIn(user, (err) => {
+    req.login(user, (err) => {
       if (err) return next(err);
-      return res.status(200).json({ loggedIn: true, role: "user" });
+      return res.status(200).json({
+        loggedIn: true,
+        role: user.role || "user",
+        id: user.id,
+      });
     });
   })(req, res, next);
 };
 
 const postLogout = (req, res, next) => {
+  console.log(req.user.id)
   req.logout((err) => {
     if (err) return next(err);
     else
@@ -37,7 +44,7 @@ const postLogout = (req, res, next) => {
 };
 
 const getUserInfo = async (req, res) => {
-  const userID = req.user.ID;
+  const userID = req.user.id;
   const user = await userQueries.getUserInfo(userID);
   return res.status(200).json({ message: "Authorized", user });
 };

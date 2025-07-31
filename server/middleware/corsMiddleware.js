@@ -1,5 +1,7 @@
 // Load Cross-Origin Resource Sharing between different domains
 const cors = require("cors");
+const dotenv = require("dotenv");
+dotenv.config();
 
 const corsMiddleware = cors({
   origin: [

@@ -4,7 +4,7 @@ const checkLoginStatus = (req) => {
   return req.isAuthenticated() && req.user.role === "user";
 };
 
-const requireUserAuth = (req, res, next) => {
+const requireUserAuth = async (req, res, next) => {
   if (checkLoginStatus(req)) {
     next();
   } else {
@@ -22,7 +22,7 @@ const checkUserInQueue = async (req, res, next) => {
       departmentID
     );
 
-    if (!userAlreadyInQueue) {
+    if (userAlreadyInQueue) {
       return res.status(409).json({
         inQueue: true,
         message: "User already in queue",

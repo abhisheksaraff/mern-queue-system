@@ -16,7 +16,6 @@ userRouter.post("/login", userController.postLogin);
 userRouter.use(userMiddleware.requireUserAuth);
 
 userRouter.get("/userInfo", userController.getUserInfo);
-
 userRouter.post("/logout", userController.postLogout);
 
 // Department Info Routes
