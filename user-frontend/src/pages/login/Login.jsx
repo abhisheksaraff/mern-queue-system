@@ -1,9 +1,31 @@
 import "./Login.css";
+import { useState } from "react";
+import { postLogin } from "../../services/api";
+import { useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuthContext";
 
 const Login = () => {
-  const handleSubmit = (e) => {
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const { setIsLoggedIn } = useAuth();
+
+  const handleSubmit =  async (e) => {
     e.preventDefault();
-    console.log("Form submitted!");
+    const id = e.target.id.value;
+    const password = e.target.password.value;
+
+    try {
+      const res = await postLogin({ id, password });
+      if (res.loggedIn) {
+        setIsLoggedIn(true);
+        navigate("/home");
+      } else {
+        setError("Invalid credentials");
+      }
+    } catch (err) {
+      setError("Login failed");
+      console.error(err);
+    }
   };
 
   return (
@@ -27,6 +49,7 @@ const Login = () => {
                 <label>Username</label>
                 <input
                   id="username"
+                  name="id"
                   placeholder="username"
                   type="text"
                   required
@@ -41,6 +64,7 @@ const Login = () => {
                 <label>Password</label>
                 <input
                   id="password"
+                  name="password"
                   placeholder="password"
                   type="password"
                   required

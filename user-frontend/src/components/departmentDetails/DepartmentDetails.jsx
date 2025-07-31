@@ -41,8 +41,8 @@ const DepartmentDetails = () => {
     <div className="DepartmentDetails">
       <div className="container">
         <div className="top">
-          <c className="back">⇚ </c>
-          <c className="name">{department.name}</c>
+          <span className="back">⇚ </span>
+          <span className="name">{department.name}</span>
           <table>
             <thead>
               <tr>

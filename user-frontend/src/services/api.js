@@ -16,15 +16,19 @@ export const getUserInfo = async () => {
   return res.data;
 };
 
-export const postLogin = async () => {
-  const res = await axios.get(`${API_BASE_URL}/login`, {
-    withCredentials: true,
-  });
+export const postLogin = async ({ id, password }) => {
+  const res = await axios.post(
+    `${API_BASE_URL}/login`,
+    { id, password },
+    {
+      withCredentials: true,
+    }
+  );
   return res.data;
 };
 
 export const postLogout = async () => {
-  const res = await axios.get(`${API_BASE_URL}/logout`, {
+  const res = await axios.post(`${API_BASE_URL}/logout`, {
     withCredentials: true,
   });
   return res.data;

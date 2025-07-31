@@ -1,25 +1,31 @@
 import { useEffect, useState } from "react";
+import { AuthContext } from "../context/AuthContext";
 import { getUserLoginStatus } from "../services/api";
 
-export const useUserLoginStatus = () => {
+const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchStatus = async () => {
+    const checkLogin = async () => {
       try {
         const res = await getUserLoginStatus();
         setIsLoggedIn(res.loggedIn);
-      } catch (err) {
+      } catch {
         setIsLoggedIn(false);
-        console.log(err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchStatus();
+    checkLogin();
   }, []);
 
-  return { isLoggedIn, loading };
+  return (
+    <AuthContext.Provider value={{ isLoggedIn, loading, setIsLoggedIn }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
+
+export default AuthProvider;
