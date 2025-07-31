@@ -6,7 +6,8 @@ const getDepartmentList = async () => {
 };
 
 const getDepartmentInfo = async (departmentID) => {
-  const { rows } = await pool.query(`SELECT * FROM departments WHERE id = $!`, [
+  console.log(departmentID)
+  const { rows } = await pool.query(`SELECT * FROM departments WHERE id = $1`, [
     departmentID,
   ]);
   return rows[0];
